@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyagoo - Best Finds/Links</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+        }
+
+        .header {
+            background: linear-gradient(to right, #fff 30%, #000 30%);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .telegram-section {
+            text-align: center;
+            color: #0066cc;
+            padding: 10px;
+        }
+
+        .telegram-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .telegram-subtitle {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo-section {
+            flex: 1;
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .logo {
+            max-width: 400px;
+            height: auto;
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffff00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .banner {
+            background: #f4a460;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .search-banner {
+            background: #f4a460;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .search-banner .highlight {
+            color: #ff0000;
+        }
+
+        .popular-section {
+            text-align: center;
+            padding: 30px 20px;
+            background: #fff;
+            color: #000;
+        }
+
+        .popular-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .popular-subtitle {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .bookmark-banner {
+            background: #000;
+            padding: 20px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1px;
+            background: #fff;
+            padding: 0;
+        }
+
+        .product {
+            background: #fff;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .product-name {
+            color: #000;
+            font-size: 14px;
+            margin-bottom: 8px;
+            min-height: 40px;
+            font-weight: 500;
+        }
+
+        .product-price {
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-link {
+            display: inline-block;
+            background: #0066cc;
+            color: #fff;
+            padding: 8px 24px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .product-link:hover {
+            background: #0052a3;
+        }
+
+        .search-box {
+            padding: 20px;
+            text-align: center;
+            background: #222;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #f4a460;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .filter-bar {
+            padding: 15px 20px;
+            background: #333;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            background: #f4a460;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover {
+            background: #ff8c00;
+        }
+
+        .filter-btn.active {
+            background: #0066cc;
+            color: #fff;
+        }
+
+        .product-count {
+            text-align: center;
+            padding: 15px;
+            background: #222;
+            font-size: 18px;
+            color: #f4a460;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 20px;
+            color: #f4a460;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="telegram-section">
+            <div class="telegram-title">TELEGRAM</div>
+            <div class="telegram-subtitle">CHANNEL</div>
+        </div>
+        <div class="logo-section">
+            <div class="logo">Joyagoo</div>
+        </div>
+    </div>
+
+    <div class="banner">
+        BEST FINDS/LINKS FOR EVERYTHING (ALL BRAND CATEGORIZED):
+    </div>
+
+    <div class="search-banner">
+        USE <span class="highlight">CTRL+F</span> TO SEARCH THE BRAND OR CLICK ON THE <span class="highlight">BRAND NAME</span>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search products, brands, or categories...">
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" onclick="filterProducts('all')">ALL</button>
+    </div>
+
+    <div class="popular-section">
+        <div class="popular-title">🔥 MOST POPULAR ITEMS 🔥</div>
+        <div class="popular-subtitle">Change zoom to 50% For the best experience</div>
+    </div>
+
+    <div class="bookmark-banner">
+        BOOKMARK THIS PAGE
+    </div>
+
+    <div class="loading" id="loading">Loading products from CSV...</div>
+    <div class="product-count" id="productCount" style="display: none;"></div>
+    <div class="products" id="products"></div>
+
+    <script>
+        let allProducts = [];
+        let currentFilter = 'all';
+
+        async function loadCSVFromFile() {
+            try {
+                const response = await window.fs.readFile('FilFindz Main SpreadSheet  MOST POPULAR.csv', { encoding: 'utf8' });
+                
+                Papa.parse(response, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        console.log('CSV Parsed:', results.data);
+                        console.log('First row:', results.data[0]);
+                        
+                        allProducts = results.data.filter(row => {
+                            const hasName = row['Product Name'] || row['product name'] || row['Name'] || row['name'];
+                            const hasLink = row['Link'] || row['link'] || row['URL'] || row['url'];
+                            return hasName && hasLink;
+                        });
+                        
+                        if (allProducts.length > 0) {
+                            document.getElementById('loading').style.display = 'none';
+                            document.getElementById('productCount').style.display = 'block';
+                            createCategoryFilters();
+                            displayProducts(allProducts);
+                        } else {
+                            document.getElementById('loading').innerHTML = 'No valid products found. Please check your CSV structure.';
+                        }
+                    },
+                    error: function(error) {
+                        document.getElementById('loading').innerHTML = 'Error reading CSV: ' + error.message;
+                    }
+                });
+            } catch (error) {
+                document.getElementById('loading').innerHTML = 'Error loading CSV file: ' + error.message;
+            }
+        }
+
+        function getColumnValue(row, possibleNames) {
+            for (let name of possibleNames) {
+                if (row[name]) return row[name];
+            }
+            return '';
+        }
+
+        function createCategoryFilters() {
+            const categoryNames = ['Category', 'category', 'Type', 'type'];
+            const categories = [...new Set(allProducts.map(p => getColumnValue(p, categoryNames) || 'Other'))].filter(c => c);
+            const filterBar = document.getElementById('filterBar');
+            
+            filterBar.innerHTML = '<button class="filter-btn active" onclick="filterProducts(\'all\')">ALL</button>';
+            
+            categories.sort().forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = cat;
+                btn.onclick = () => filterProducts(cat);
+                filterBar.appendChild(btn);
+            });
+        }
+
+        function filterProducts(category) {
+            currentFilter = category;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === category || (category === 'all' && btn.textContent === 'ALL')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryNames = ['Category', 'category', 'Type', 'type'];
+            
+            let filtered = category === 'all' 
+                ? allProducts 
+                : allProducts.filter(p => getColumnValue(p, categoryNames) === category);
+
+            if (searchTerm) {
+                filtered = filtered.filter(product => {
+                    const name = getColumnValue(product, ['Product Name', 'product name', 'Name', 'name']).toLowerCase();
+                    const cat = getColumnValue(product, categoryNames).toLowerCase();
+                    const price = getColumnValue(product, ['Price', 'price']).toLowerCase();
+                    return name.includes(searchTerm) || cat.includes(searchTerm) || price.includes(searchTerm);
+                });
+            }
+            
+            displayProducts(filtered);
+        }
+
+        function displayProducts(products) {
+            const container = document.getElementById('products');
+            const countDiv = document.getElementById('productCount');
+            container.innerHTML = '';
+            countDiv.textContent = `Showing ${products.length} products`;
+
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                
+                const name = getColumnValue(product, ['Product Name', 'product name', 'Name', 'name']) || 'Unnamed Product';
+                const price = getColumnValue(product, ['Price', 'price']) || 'N/A';
+                const link = getColumnValue(product, ['Link', 'link', 'URL', 'url']) || '#';
+                const image = getColumnValue(product, ['Image URL', 'image url', 'Image', 'image']) || 'https://via.placeholder.com/200x200?text=No+Image';
+
+                productDiv.innerHTML = `
+                    <img src="${image}" alt="${name}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'" loading="lazy">
+                    <div class="product-name">${name}</div>
+                    <div class="product-price">${price}</div>
+                    <a href="${link}" class="product-link" target="_blank" rel="noopener">LINK</a>
+                `;
+
+                container.appendChild(productDiv);
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const categoryNames = ['Category', 'category', 'Type', 'type'];
+            
+            let filtered = currentFilter === 'all' 
+                ? allProducts 
+                : allProducts.filter(p => getColumnValue(p, categoryNames) === currentFilter);
+
+            if (searchTerm) {
+                filtered = filtered.filter(product => {
+                    const name = getColumnValue(product, ['Product Name', 'product name', 'Name', 'name']).toLowerCase();
+                    const category = getColumnValue(product, categoryNames).toLowerCase();
+                    const price = getColumnValue(product, ['Price', 'price']).toLowerCase();
+                    
+                    return name.includes(searchTerm) || 
+                           category.includes(searchTerm) || 
+                           price.includes(searchTerm);
+                });
+            }
+
+            displayProducts(filtered);
+        });
+
+        // Load the CSV when page loads
+        loadCSVFromFile();
+    </script>
+</body>
+</html>
