@@ -269,7 +269,7 @@
 
         async function loadCSVFromFile() {
             try {
-                const response = await window.fs.readFile('FilFindz Main SpreadSheet  MOST POPULAR.csv', { encoding: 'utf8' });
+                const response = await window.fs.readFile('FilFindz Main SpreadSheet.csv', { encoding: 'utf8' });
                 
                 Papa.parse(response, {
                     header: true,
